@@ -1,0 +1,61 @@
+[workspace.package]
+version = "3.0.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/succinctlabs/sp1"
+keywords = ["sp1", "succinct", "zero-knowledge", "zkvm"]
+categories = ["cryptography"]
+
+[workspace]
+members = [
+  "crates/curves",
+  "crates/executor",
+  "crates/primitives",
+  "benchmark",
+]
+exclude = ["examples/target"]
+resolver = "2"
+
+[profile.release]
+opt-level = 3
+
+[profile.bench]
+opt-level = 3
+
+[profile.fast]
+inherits = "release"
+debug = true
+debug-assertions = true
+
+[workspace.dependencies]
+# sp1
+sp1-core-executor = { path = "crates/executor", version = "3.0.0" }
+sp1-curves = { path = "crates/curves", version = "3.0.0" }
+sp1-primitives = { path = "crates/primitives", version = "3.0.0" }
+
+# p3
+p3-air = "0.1.4-succinct"
+p3-field = "0.1.4-succinct"
+p3-commit = "0.1.4-succinct"
+p3-matrix = "0.1.4-succinct"
+p3-baby-bear = { version = "0.1.4-succinct", features = ["nightly-features"] }
+p3-util = "0.1.4-succinct"
+p3-challenger = "0.1.4-succinct"
+p3-dft = "0.1.4-succinct"
+p3-fri = "0.1.4-succinct"
+p3-goldilocks = "0.1.4-succinct"
+p3-keccak = "0.1.4-succinct"
+p3-keccak-air = "0.1.4-succinct"
+p3-blake3 = "0.1.4-succinct"
+p3-mds = "0.1.4-succinct"
+p3-merkle-tree = "0.1.4-succinct"
+p3-poseidon2 = "0.1.4-succinct"
+p3-symmetric = "0.1.4-succinct"
+p3-uni-stark = "0.1.4-succinct"
+p3-maybe-rayon = "0.1.4-succinct"
+p3-bn254-fr = "0.1.4-succinct"
+
+[workspace.metadata.typos]
+# TODO: Fix in next version since CommitCommitedValuesDigest is retained since it's present in constraints.json
+default.extend-ignore-re = ["Jo-Philipp Wich", "SubEIN", "DivEIN", "CommitCommitedValuesDigest"]
+default.extend-ignore-words-re = ["(?i)groth", "TRE"]
