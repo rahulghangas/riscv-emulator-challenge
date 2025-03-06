@@ -1,6 +1,7 @@
 use hashbrown::HashMap;
 
 use crate::{state::ForkState, ExecutorMode};
+use crate::events::MemoryRecord;
 
 use super::{Syscall, SyscallCode, SyscallContext};
 
@@ -39,10 +40,10 @@ impl Syscall for ExitUnconstrainedSyscall {
             for (addr, value) in ctx.rt.unconstrained_state.memory_diff.drain() {
                 match value {
                     Some(value) => {
-                        ctx.rt.state.memory.insert(addr, value);
+                        ctx.rt.state.memory.0[addr as usize] = value;
                     }
                     None => {
-                        ctx.rt.state.memory.remove(&addr);
+                        ctx.rt.state.memory.0[addr as usize] = MemoryRecord::default();
                     }
                 }
             }

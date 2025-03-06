@@ -4,9 +4,28 @@ use std::{
 };
 
 use hashbrown::HashMap;
-use serde::{Deserialize, Serialize};
+use serde::{self, Deserialize, Serialize};
 
+use serde_big_array::BigArray;
 use crate::{events::MemoryRecord, syscalls::SyscallCode, ExecutorMode};
+
+
+// 2GB memory space for the program with 32 bit address space
+/// The maximum number of memory addresses that can be tracked.
+pub const MAXIMUM_ADDRESSES: usize = 1 << 29;
+
+/// The memory of the program.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Memory(
+    #[serde(with = "BigArray")]
+    pub [MemoryRecord; MAXIMUM_ADDRESSES]
+);
+
+impl Default for Memory {
+    fn default() -> Self {
+        Self([MemoryRecord::default(); MAXIMUM_ADDRESSES])
+    }
+}
 
 /// Holds data describing the current state of a program's execution.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -20,7 +39,7 @@ pub struct ExecutionState {
 
     /// The memory which instructions operate over. Values contain the memory value and last shard
     /// + timestamp that each memory address was accessed.
-    pub memory: HashMap<u32, MemoryRecord>,
+    pub memory: Box<Memory>,
 
     /// The global clock keeps track of how many instructions have been executed through all shards.
     pub global_clk: u64,
@@ -63,7 +82,7 @@ impl ExecutionState {
             current_shard: 1,
             clk: 0,
             pc: pc_start,
-            memory: HashMap::new(),
+            memory: Default::default(),
             uninitialized_memory: HashMap::new(),
             input_stream: Vec::new(),
             input_stream_ptr: 0,
