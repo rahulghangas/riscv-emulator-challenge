@@ -49,3 +49,14 @@ alloy-primitives = "0.8.5"
 [features]
 programs = []
 bigint-rug = ["sp1-curves/bigint-rug"]
+
+[build-dependencies]
+# ... existing build dependencies ...
+
+# These settings will be applied when building in release mode
+[profile.release]
+opt-level = 3
+debug = false
+lto = true
+codegen-units = 1
+panic = "abort"

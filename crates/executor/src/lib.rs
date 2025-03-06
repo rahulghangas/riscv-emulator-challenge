@@ -33,6 +33,9 @@ mod state;
 pub mod syscalls;
 mod utils;
 
+#[cfg(target_arch = "x86_64")]
+mod utils_simd;
+
 pub use context::*;
 pub use executor::*;
 pub use hook::*;
@@ -42,3 +45,6 @@ pub use program::*;
 pub use register::*;
 pub use state::*;
 pub use utils::*;
+
+#[cfg(target_arch = "x86_64")]
+pub use utils_simd::*;
