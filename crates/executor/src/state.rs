@@ -70,6 +70,12 @@ pub struct ExecutionState {
 
     /// Keeps track of how many times a certain syscall has been called.
     pub syscall_counts: HashMap<SyscallCode, u64>,
+
+    // Replace HashMap-based register storage with direct arrays
+    // Hot registers (x0-x7) are accessed most frequently
+    pub hot_registers: [MemoryRecord; 8],
+    // Cold registers (x8-x31) are accessed less frequently
+    pub cold_registers: [MemoryRecord; 24],
 }
 
 impl ExecutionState {
@@ -90,6 +96,31 @@ impl ExecutionState {
             public_values_stream_ptr: 0,
             proof_stream_ptr: 0,
             syscall_counts: HashMap::new(),
+            hot_registers: [MemoryRecord::default(); 8],
+            cold_registers: [MemoryRecord::default(); 24],
+        }
+    }
+    
+    // Helper method to get a register value
+    pub fn get_register(&self, reg: usize) -> &MemoryRecord {
+        if reg < 8 {
+            &self.hot_registers[reg]
+        } else {
+            &self.cold_registers[reg - 8]
+        }
+    }
+    
+    // Helper method to set a register value
+    pub fn set_register(&mut self, reg: usize, record: MemoryRecord) {
+        // Register x0 is hardwired to zero in RISC-V
+        if reg == 0 {
+            return;
+        }
+        
+        if reg < 8 {
+            self.hot_registers[reg] = record;
+        } else {
+            self.cold_registers[reg - 8] = record;
         }
     }
 }

@@ -1287,7 +1287,6 @@ mod tests {
         let program = Program::new(instructions, 0, 0);
 
         let mut runtime = Executor::new(program);
-
         runtime.run().unwrap();
         assert_eq!(runtime.register(Register::X31), 37);
     }
@@ -1612,7 +1611,7 @@ mod tests {
         simple_op_code_test(Opcode::MULH, 0x00000000, 0x00000003, 0x00000007);
         simple_op_code_test(Opcode::MULH, 0x00000000, 0x00000000, 0xffff8000);
         simple_op_code_test(Opcode::MULH, 0x00000000, 0x80000000, 0x00000000);
-        simple_op_code_test(Opcode::MULH, 0x00000000, 0x80000000, 0x00000000);
+        simple_op_code_test(Opcode::MULH, 0x00000000, 0x80000000, 0xffff8000);
         simple_op_code_test(Opcode::MULH, 0xffff0081, 0xaaaaaaab, 0x0002fe7d);
         simple_op_code_test(Opcode::MULH, 0xffff0081, 0x0002fe7d, 0xaaaaaaab);
         simple_op_code_test(Opcode::MULH, 0x00010000, 0xff000000, 0xff000000);
