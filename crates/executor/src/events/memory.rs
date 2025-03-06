@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 ///
 /// This object encapsulates the information needed to prove a memory access operation. This
 /// includes the shard, timestamp, and value of the memory address.
-#[derive(Debug, Copy, Clone, Default, Serialize, Deserialize)]
+#[derive(PartialEq, Eq, Debug, Copy, Clone, Default, Serialize, Deserialize)]
 pub struct MemoryRecord {
     /// The shard number.
     pub shard: u32,
